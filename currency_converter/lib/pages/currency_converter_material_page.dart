@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CurrencyConverterMaterialHomePage extends StatelessWidget {
+class CurrencyConverterMaterialHomePage extends StatefulWidget {
   const CurrencyConverterMaterialHomePage({super.key});
+  @override
+  State<CurrencyConverterMaterialHomePage> createState() =>
+      _CurrencyConverterState();
+}
+
+class _CurrencyConverterState extends State<CurrencyConverterMaterialHomePage> {
+  double convertedINR = 0;
+  final TextEditingController textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final border = OutlineInputBorder(
@@ -9,17 +18,27 @@ class CurrencyConverterMaterialHomePage extends StatelessWidget {
         width: 2.0,
         style: BorderStyle.solid,
       ),
-      borderRadius: BorderRadius.circular(60),
+      borderRadius: BorderRadius.circular(10),
     );
 
     return Scaffold(
       backgroundColor: Colors.blueGrey,
+      appBar: AppBar(
+        title: const Text(
+          'Currency Convertor',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.blueGrey,
+        elevation: 5,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text("0",
-                style: TextStyle(
+            Text('INR $convertedINR',
+                style: const TextStyle(
                   fontSize: 45,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -27,6 +46,7 @@ class CurrencyConverterMaterialHomePage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
+                controller: textEditingController,
                 style: const TextStyle(
                   color: Colors.black,
                 ),
@@ -52,14 +72,17 @@ class CurrencyConverterMaterialHomePage extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: TextButton(
                   onPressed: () {
-                    print('On Pressed');
+                    setState(() {
+                      convertedINR =
+                          double.parse(textEditingController.text) * 80;
+                    });
                   },
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.black),
-                    foregroundColor: MaterialStatePropertyAll(Colors.white),
-                    minimumSize:
-                        MaterialStatePropertyAll(Size(double.infinity, 50)),
-                  ),
+                  style: TextButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
                   child: const Text('Convert')),
             ),
           ],
