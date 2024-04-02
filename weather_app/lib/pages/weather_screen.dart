@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/custom_widgets/additional_information_widget.dart';
 import 'package:weather_app/custom_widgets/forecast_item_widget.dart';
@@ -79,7 +78,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           final windSpeed = weatherRes['wind']['speed'];
 
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -100,24 +99,24 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           sigmaY: 10.0,
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Column(
                             children: [
                               Text(
                                 '$currentWeather K',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 32, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Icon(
                                   currentSky == 'Clouds' || currentSky == 'Rain'
                                       ? Icons.cloud
                                       : Icons.sunny,
                                   size: 50),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
                                 currentSky,
-                                style: TextStyle(fontSize: 20),
+                                style: const TextStyle(fontSize: 20),
                               ),
                             ],
                           ),
