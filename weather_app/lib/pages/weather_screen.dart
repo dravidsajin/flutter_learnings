@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/custom_widgets/additional_information_widget.dart';
 import 'package:weather_app/custom_widgets/forecast_item_widget.dart';
 import 'package:http/http.dart' as http;
@@ -24,9 +26,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Future fetchWeatherData() async {
     try {
       String cityName = 'london';
+      String apiToken = '';
       final weatherData = await http.get(Uri.parse(
-          'https://api.openweathermap.org/data/2.5/forecast?q=$cityName,uk&APPID=8a1a290ea157441567ed5194bb327ab9'));
-
+          'https://api.openweathermap.org/data/2.5/forecast?q=$cityName,uk&APPID=$apiToken'));
       final decodedData = jsonDecode(weatherData.body);
       if (decodedData['cod'] != '200') {
         throw decodedData['message'];
@@ -51,7 +53,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                print('refreshing');
+                setState(() {});
               },
               icon: const Icon(Icons.refresh))
         ],
@@ -63,8 +65,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+            return Center(child: Text(snapshot.error.toString()));
           }
+          final forecastList = snapshot.data['list'];
+          // Current weather section
+          final weatherRes = forecastList[0];
+          final currentWeather = weatherRes['main']['temp'];
+          final currentSky = weatherRes['weather'][0]['main'];
+
+          // Additional information section
+          final humidity = weatherRes['main']['humidity'];
+          final pressure = weatherRes['main']['pressure'];
+          final windSpeed = weatherRes['wind']['speed'];
+
           return Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
@@ -91,15 +104,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           child: Column(
                             children: [
                               Text(
-                                '$temp K',
+                                '$currentWeather K',
                                 style: TextStyle(
                                     fontSize: 32, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 10),
-                              Icon(Icons.cloud, size: 50),
+                              Icon(
+                                  currentSky == 'Clouds' || currentSky == 'Rain'
+                                      ? Icons.cloud
+                                      : Icons.sunny,
+                                  size: 50),
                               SizedBox(height: 10),
                               Text(
-                                'Rain',
+                                currentSky,
                                 style: TextStyle(fontSize: 20),
                               ),
                             ],
@@ -120,36 +137,25 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      ForeCastItemWidget(
-                        time: '3.00',
-                        icon: Icons.cloud,
-                        value: '301.17',
-                      ),
-                      ForeCastItemWidget(
-                        time: '3.00',
-                        icon: Icons.cloud,
-                        value: '301.17',
-                      ),
-                      ForeCastItemWidget(
-                        time: '3.00',
-                        icon: Icons.cloud,
-                        value: '301.17',
-                      ),
-                      ForeCastItemWidget(
-                        time: '3.00',
-                        icon: Icons.cloud,
-                        value: '301.17',
-                      ),
-                      ForeCastItemWidget(
-                        time: '3.00',
-                        icon: Icons.cloud,
-                        value: '301.17',
-                      ),
-                    ],
+                SizedBox(
+                  height: 120,
+                  child: ListView.builder(
+                    itemCount: 5,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      final weatherRes = forecastList[index + 1];
+                      final currentWeather = weatherRes['main']['temp'];
+                      final currentSky = weatherRes['weather'][0]['main'];
+                      final time = DateFormat.j()
+                          .format(DateTime.parse(weatherRes['dt_txt']));
+                      return ForeCastItemWidget(
+                        time: time,
+                        icon: currentSky == 'Clouds' || currentSky == 'Rain'
+                            ? Icons.cloud
+                            : Icons.sunny,
+                        value: currentWeather.toString(),
+                      );
+                    },
                   ),
                 ),
                 // Additional Information Card
@@ -161,17 +167,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     AdditionalInformationWidget(
-                        icon: Icons.water_drop, label: 'Humidty', value: '94'),
+                        icon: Icons.water_drop,
+                        label: 'Humidity',
+                        value: humidity.toString()),
                     AdditionalInformationWidget(
-                        icon: Icons.air, label: 'Wind Speed', value: '7.67'),
+                        icon: Icons.air,
+                        label: 'Wind Speed',
+                        value: windSpeed.toString()),
                     AdditionalInformationWidget(
                         icon: Icons.beach_access,
                         label: 'Pressure',
-                        value: '1006'),
+                        value: pressure.toString()),
                   ],
                 )
               ],
