@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shopping_app/global_variables.dart';
+
+import '../widgets/product_container.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -64,7 +68,9 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: GestureDetector(
                       onTap: () {
-                        chipSelected = currentFilter;
+                        setState(() {
+                          chipSelected = currentFilter;
+                        });
                       },
                       child: Chip(
                         elevation: 1,
@@ -87,6 +93,19 @@ class _HomePageState extends State<HomePage> {
                         // },
                       ),
                     ),
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final item = products[index];
+                  return ProductCard(
+                    title: item['title'] as String,
+                    price: item['price'] as double,
+                    imageUrl: item['imageUrl'] as String,
                   );
                 },
               ),
