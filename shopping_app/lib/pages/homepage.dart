@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shopping_app/global_variables.dart';
+import 'package:shopping_app/pages/product_details_page.dart';
 
 import '../widgets/product_container.dart';
 
@@ -99,13 +98,24 @@ class _HomePageState extends State<HomePage> {
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final item = products[index];
-                  return ProductCard(
-                    title: item['title'] as String,
-                    price: item['price'] as double,
-                    imageUrl: item['imageUrl'] as String,
-                    backgroundColor: index.isEven
-                        ? const Color.fromRGBO(216, 240, 253, 1)
-                        : const Color.fromRGBO(245, 247, 249, 1),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ProductDetailsPage(product: item);
+                          },
+                        ),
+                      );
+                    },
+                    child: ProductCard(
+                      title: item['title'] as String,
+                      price: item['price'] as double,
+                      imageUrl: item['imageUrl'] as String,
+                      backgroundColor: index.isEven
+                          ? const Color.fromRGBO(216, 240, 253, 1)
+                          : const Color.fromRGBO(245, 247, 249, 1),
+                    ),
                   );
                 },
               ),

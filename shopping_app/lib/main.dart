@@ -39,10 +39,10 @@ class ShoppingApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      // home: const HomePage(),
-      home: ProductDetailsPage(
-        product: products[0],
-      ),
+      home: const HomePage(),
+      // home: ProductDetailsPage(
+      //   product: products[0],
+      // ),
     );
   }
 }
