@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_app/pages/homepage.dart';
-import 'package:shopping_app/pages/product_details_page.dart';
-import 'global_variables.dart';
 
 void main() {
   runApp(const ShoppingApp());
@@ -20,7 +18,7 @@ class ShoppingApp extends StatelessWidget {
           seedColor: const Color.fromRGBO(254, 246, 1, 1),
           primary: const Color.fromRGBO(254, 246, 1, 1),
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
           fontSize: 20,
           color: Colors.black,
@@ -40,9 +38,6 @@ class ShoppingApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomePage(),
-      // home: ProductDetailsPage(
-      //   product: products[0],
-      // ),
     );
   }
 }
